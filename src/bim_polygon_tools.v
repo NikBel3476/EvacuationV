@@ -40,18 +40,18 @@ fn on_segment(a &Point, b &Point, c &Point) bool {
 fn geom_tools_is_point_in_polygon(point &Point, polygon &Polygon) bool {
 	// https://web.archive.org/web/20161108113341/https://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
 	mut c := false
-	mut j := polygon.points.len - 1
-	for i := 0; i < polygon.points.len - 1; i++ {
-		if on_segment(&polygon.points[i] , point, &polygon.points[i + 1] ) {
+	mut point1 := polygon.points.last()
+	for point2 in polygon.points {
+		if on_segment(&point1, point, &point2) {
 			return true
 		}
-		if (polygon.points[i].y > point.y) != (polygon.points[j].y > point.y) &&
-				(point.x < (polygon.points[j].x - polygon.points[i].x) * (point.y - polygon.points[i].y) /
-					(polygon.points[j].y - polygon.points[i].y) + polygon.points[i].x)
+		if (point2.y > point.y) != (point1.y > point.y) &&
+				point.x < (point1.x - point2.x) * (point.y - point2.y) /
+					(point1.y - point2.y) + point2.x
 		{
 			c = !c
 		}
-		j = i
+		point1 = point2
 	}
 	return c
 }
@@ -136,4 +136,3 @@ fn geom_tools_nearest_point(point_start &Point, line &Line) Point {
 	point_end.y = yy
 	return point_end
 }
-
