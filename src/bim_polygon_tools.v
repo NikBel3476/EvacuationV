@@ -25,9 +25,9 @@ fn geom_tools_length_side(p1 &Point, p2 &Point) f64 {
 
 fn geom_tools_area_polygon(polygon &Polygon) f64 {
 	// https://ru.wikipedia.org/wiki/Формула_площади_Гаусса
-	n := polygon.points.len - 1
+	n := polygon.points.len - 2 // last point is equal to first, so we don't count it
 	mut sum := polygon.points[n].x * polygon.points[0].y - polygon.points[0].x * polygon.points[n].y
-	for i := 0 ; i < n - 1; i++ {
+	for i := 0 ; i < n; i++ {
 		sum += polygon.points[i].x * polygon.points[i + 1].y - polygon.points[i + 1].x * polygon.points[i].y
 	}
 	return 0.5 * math.abs(sum)
@@ -41,11 +41,11 @@ fn geom_tools_is_point_in_polygon(point &Point, polygon &Polygon) bool {
 	// https://web.archive.org/web/20161108113341/https://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
 	mut c := false
 	mut j := polygon.points.len - 1
-	for i := 0; i < polygon.points.len; i++ {
+	for i := 0; i < polygon.points.len - 1; i++ {
 		if on_segment(&polygon.points[i] , point, &polygon.points[i + 1] ) {
 			return true
 		}
-		if ((polygon.points[i].y > point.y) != (polygon.points[j].y > point.y)) &&
+		if (polygon.points[i].y > point.y) != (polygon.points[j].y > point.y) &&
 				(point.x < (polygon.points[j].x - polygon.points[i].x) * (point.y - polygon.points[i].y) /
 					(polygon.points[j].y - polygon.points[i].y) + polygon.points[i].x)
 		{

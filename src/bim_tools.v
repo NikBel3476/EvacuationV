@@ -14,7 +14,7 @@ mut:
 	z_level f64        ///< Уровень, на котором находится элемент
 	width f64          ///< Ширина проема/двери
 	nop_proceeding f64 ///< Количество людей, которые прошли через элемент
-	sign BimElementSign           ///< Тип элемента
+	sign string           ///< Тип элемента
 	// numofoutputs u8   ///< Количество связанных с текущим элементов
 	is_visited bool     ///< Признак посещения элемента
 	is_blocked bool     ///< Признак недоступности элемента для движения
@@ -22,6 +22,7 @@ mut:
 
 /// Структура, расширяющая элемент типа ROOM и STAIR
 struct BimZone {
+mut:
 	uuid string           ///< UUID идентификатор элемента
 	id usize             ///< Внутренний номер элемента
 	name string           ///< Название элемента
@@ -33,7 +34,7 @@ struct BimZone {
 	potential f64      ///< Время достижения безопасной зоны
 	area f64           ///< Площадь элемента
 	hazard_level u8   ///< Уровень опасности, % (0, 10, 20, ..., 90, 100)
-	sign BimElementSign           ///< Тип элемента
+	sign string           ///< Тип элемента
 	// numofoutputs u8   ///< Количество связанных с текущим элементов
 	is_visited bool     ///< Признак посещения элемента
 	is_blocked bool     ///< Признак недоступности элемента для движения
@@ -52,6 +53,7 @@ struct BimLevel {
 
 /// Структура, описывающая здание
 struct Bim {
+mut:
 	levels []BimLevel        ///< Массив уровней здания
 	name string           ///< Название здания
 	zones []BimZone         ///< Список зон объекта
@@ -71,7 +73,7 @@ fn bim_tools_new(bim_json &BimJsonObject) Bim {
 		mut level_transits := []BimTransit{}
 
 		for json_element in json_level.elements {
-			if json_element.sign in [.room, .staircase] {
+			if json_element.sign in ["Room", "Staircase"] {
 				zone := BimZone {
 					uuid: json_element.uuid
 					id: bim_element_rs_id++
@@ -91,7 +93,7 @@ fn bim_tools_new(bim_json &BimJsonObject) Bim {
 				}
 				level_zones << zone
 				bim_zones << zone
-			} else if json_element.sign in [.door_way, .door_way_int, .door_way_out] {
+			} else if json_element.sign in ["DoorWay", "DoorWayInt", "DoorWayOut"] {
 				transit := BimTransit {
 					uuid: json_element.uuid
 					id: bim_element_d_id++
@@ -112,8 +114,8 @@ fn bim_tools_new(bim_json &BimJsonObject) Bim {
 		}
 
 		level := BimLevel {
-			zones: bim_zones
-			transits: bim_transits
+			zones: level_zones
+			transits: level_transits
 			name: json_level.name
 			z_level: json_level.z_level
 		}
@@ -144,9 +146,9 @@ fn outside_init(bim_json &BimJsonObject) BimZone {
 
 	for json_level in bim_json.levels {
 		for json_element in json_level.elements {
-			if json_element.sign == .door_way_out {
+			if json_element.sign == "DoorWayOut" {
 				outputs << json_element.uuid
-			} else if json_element.sign in [.room, .staircase] {
+			} else if json_element.sign in ["Room", "Staircase"] {
 				outside_id++
 			}
 		}
@@ -166,7 +168,7 @@ fn outside_init(bim_json &BimJsonObject) BimZone {
     potential: 0
     area: math.max_f64
     hazard_level: 0
-    sign: .door_way_out
+    sign: "Outside"
     is_visited: false
     is_blocked: false
     is_safe: true
@@ -177,13 +179,13 @@ fn outside_init(bim_json &BimJsonObject) BimZone {
 // Вычисление ширины проема по данным из модели здания
 fn calculate_transits_width(zones []BimZone, mut transits []BimTransit) {
 	for mut transit in transits {
-		related_zones := zones.filter(it.uuid == transit.uuid)
+		related_zones := zones.filter(it.uuid in transit.outputs)
 
 		if related_zones.len == 0 {
 			panic("Не найден элемент, соединенный с переходом:\n${transit}")
 		}
 
-		if related_zones.all(it.sign == .staircase) { // => Межэтажный проем
+		if related_zones.all(it.sign == "Staircase") { // => Межэтажный проем
 			transit.width = math.sqrt((related_zones[0].area + related_zones[1].area) / 2)
 			continue
 		}
@@ -215,12 +217,12 @@ fn calculate_transits_width(zones []BimZone, mut transits []BimTransit) {
 			panic("Невозможно вычислить ширину двери:\n${transit}")
 		}
 
-		if transit.sign in [.door_way_int, .door_way_out] {
+		if transit.sign in ["DoorWayInt", "DoorWayOut"] {
 			width1 := geom_tools_length_side(edge1.p1, edge1.p2)
 			width2 := geom_tools_length_side(edge2.p1, edge2.p2)
 
 			width = (width1 + width2) / 2
-		} else if transit.sign == .door_way {
+		} else if transit.sign == "DoorWay" {
 			width = width_door_way(related_zones[0].polygon, related_zones[1].polygon, edge1, edge2)
 		}
 
@@ -314,4 +316,31 @@ fn intersected_edge(polygon &Polygon, line_to_check &Line) Line {
     }
 
     return line
+}
+
+fn bim_tools_set_people_to_zone(mut zone &BimZone, num_of_people f64)
+{
+	zone.numofpeople = num_of_people;
+}
+
+fn bim_tools_get_area_bim(bim &Bim) f64 {
+	mut area := 0.0
+	for level in bim.levels {
+		for zone in level.zones {
+			if zone.sign in ["Room", "Staircase"] {
+				area += zone.area
+			}
+		}
+	}
+	return area
+}
+
+fn bim_tools_get_numofpeople(bim &Bim) f64 {
+	mut numofpeople := 0.0
+	for level in bim.levels {
+		for zone in level.zones {
+			numofpeople += zone.numofpeople
+		}
+	}
+	return numofpeople
 }

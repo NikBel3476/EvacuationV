@@ -1,15 +1,15 @@
 {
   "bim": [
-    "../res/two_levels.json",
-    "../res/one_zone_one_exit.json",
-    "../res/three_zone_three_transit.json",
-    "../res/building_test.json",
-    "../res/udsu_block_1.json",
-    "../res/udsu_block_2.json",
-    "../res/udsu_block_3.json",
-    "../res/udsu_block_4.json",
-    "../res/udsu_block_5.json",
-    "../res/udsu_block_7.json"
+    "res/two_levels.json",
+    "res/one_zone_one_exit.json",
+    "res/three_zone_three_transit.json",
+    "res/building_test.json",
+    "res/udsu_block_1.json",
+    "res/udsu_block_2.json",
+    "res/udsu_block_3.json",
+    "res/udsu_block_4.json",
+    "res/udsu_block_5.json",
+    "res/udsu_block_7.json"
   ],
   "logger_configure": "../logger.conf",
   "distribution": {

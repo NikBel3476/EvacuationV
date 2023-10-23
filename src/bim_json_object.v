@@ -16,14 +16,14 @@ enum BimElementSign {
 
 /// Структура, описывающая элемент
 struct BimJsonElement {
-	uuid string [json: "@"]          ///< [JSON] UUID идентификатор элемента
+	uuid string [json: Id]          ///< [JSON] UUID идентификатор элемента
 	name string [json: Name]         ///< [JSON] Название элемента
 	xy []Polygon [json: XY]      ///< [JSON] Полигон элемента
 	outputs []string [json: Output]      ///< [JSON] Массив UUID элементов, которые являются соседними
 	id usize [skip]            ///< Внутренний номер элемента (генерируется)
 	size_z f64 [json: SizeZ]        ///< [JSON] Высота элемента
 	// z_level f64 [skip]       ///< Уровень, на котором находится элемент
-	sign BimElementSign [json: Sign]          ///< [JSON] Тип элемента
+	sign string [json: Sign]          ///< [JSON] Тип элемента
 }
 
 /// Структура поля, описывающего географическое положение объекта
