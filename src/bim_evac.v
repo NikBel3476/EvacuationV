@@ -32,24 +32,19 @@ fn evac_moving_step(
 	reset_zones(mut zones)
 	reset_transits(mut transits)
 
-	mut unprocessed_zones_count := zones.len
 	mut zones_to_process := []&BimZone{}
-	// println("graph ${graph}")
-	// println("zones ${zones}")
 
 	unsafe {
 		outside_id := graph.node_count - 1
 		mut ptr := &graph.head[outside_id]
-		mut outside := &zones[outside_id]
-		mut receiving_zone := outside
-		// println("before loop ${zones}")
+		mut receiving_zone := &zones[outside_id]
 
-		for {
-			// FIXME: check ptr to voidptr
+		for _ in 0..zones.len {
 			for i := 0; i < receiving_zone.outputs.len && ptr != nil; i++ {
 				mut transit := &transits[ptr.eid]
 
 				if transit.is_visited || transit.is_blocked {
+					ptr = ptr.next
 					continue
 				}
 
@@ -70,7 +65,6 @@ fn evac_moving_step(
 					evac_cfg.max_speed,
 					evac_cfg.modeling_step
 				)
-				// println("Moved people ${moved_people}")
 				receiving_zone.numofpeople += moved_people
 				giver_zone.numofpeople -= moved_people
 				transit.nop_proceeding = moved_people
@@ -80,7 +74,7 @@ fn evac_moving_step(
 
 				if giver_zone.outputs.len > 1 &&
 					!giver_zone.is_blocked &&
-					!zones_to_process.any(it.uuid == giver_zone.uuid)
+					!zones_to_process.any(it.id == giver_zone.id)
 				{
 					zones_to_process << giver_zone
 				}
@@ -95,11 +89,6 @@ fn evac_moving_step(
 				ptr = &graph.head[receiving_zone.id]
 				zones_to_process.delete(0)
 			}
-
-			if unprocessed_zones_count == 0 {
-				break
-			}
-			unprocessed_zones_count--
 		}
 	}
 }
