@@ -38,10 +38,22 @@ fn app(cmd Command) ! {
 
 	for bim_file_name in scenario_configuration.bim {
 		bim_json := bim_json_new(bim_file_name)
+		println("The file name of the used bim `${bim_file_name.split("/").last()}`")
 
 		mut bim_tools := bim_tools_new(bim_json)
 
 		apply_scenario_bim_params(mut &bim_tools, scenario_configuration)
+
+		mut total_area := 0.0
+		mut total_num_of_people := 0.0
+		for zone in bim_tools.zones {
+			if zone.sign != "Outside" {
+				total_area += zone.area
+				total_num_of_people += zone.numofpeople
+			}
+		}
+		println("people ${total_num_of_people}")
+		println("area ${total_area}")
 
 		bim_graph := bim_graph_new(bim_tools)
 

@@ -19,9 +19,7 @@ struct BimEdge {
 }
 
 fn bim_graph_new(bim &Bim) BimGraph {
-	mut edges := []BimEdge{len: bim.transits.len}
-
-	graph_create_edges(bim.transits, mut edges, bim.zones)
+	mut edges := graph_create_edges(bim.transits,  bim.zones)
 
 	graph := graph_create(edges, usize(bim.transits.len), usize(bim.zones.len))
 	return graph
@@ -72,25 +70,27 @@ fn graph_create(edges []BimEdge, edge_count usize, node_count usize) BimGraph {
 	}
 }
 
-fn graph_create_edges(transits []BimTransit, mut edges []BimEdge, zones []BimZone)
+fn graph_create_edges(transits []BimTransit, zones []BimZone) []BimEdge
 {
+	mut edges := []BimEdge{}
 	for i, transit in transits {
 		mut ids := [usize(0), usize(zones.len)]!
-
 		mut j := 0
+
 		for k, zone in zones {
-			if arraylist_equal_callback(zone, transit) && j != 2 {
+			if zone.outputs.any(it == transit.uuid) && j != 2 {
 				ids[j] = usize(k)
 				j++
 			}
 		}
 
-		edges[i] = BimEdge {
+		edges << BimEdge {
 			id: usize(i)
 			src: ids[0]
 			dest: ids[1]
 		}
 	}
+	return edges
 }
 
 fn arraylist_equal_callback(zone &BimZone, transit &BimTransit) bool {

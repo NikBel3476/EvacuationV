@@ -125,8 +125,8 @@ fn bim_tools_new(bim_json &BimJsonObject) Bim {
 	outside_zone := outside_init(bim_json)
 	bim_zones << outside_zone
 
-	bim_zones.sort(a.id > b.id)
-	bim_transits.sort(a.id > b.id)
+	bim_zones.sort(a.id < b.id)
+	bim_transits.sort(a.id < b.id)
 
 	calculate_transits_width(bim_zones, mut bim_transits)
 

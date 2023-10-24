@@ -16,30 +16,38 @@ fn evac_def_modeling_step(bim &Bim, evac_cfg &EvacConfiguration) f64 {
 
 	average_size := area / bim.zones.len
 	hxy := math.sqrt(average_size) // характерный размер области, м
-	return if evac_cfg.modeling_step == 0 {
+	return if evac_cfg.modeling_step == 0.0 {
 		hxy / evac_cfg.max_speed * 0.1
 	} else {
 		evac_cfg.modeling_step
 	}
 }
 
-fn evac_moving_step(graph &BimGraph, mut zones []BimZone, mut transits []BimTransit, evac_cfg &EvacConfiguration) {
+fn evac_moving_step(
+	graph &BimGraph,
+	mut zones []BimZone,
+	mut transits []BimTransit,
+	evac_cfg &EvacConfiguration
+) {
 	reset_zones(mut zones)
 	reset_transits(mut transits)
 
 	mut unprocessed_zones_count := zones.len
 	mut zones_to_process := []&BimZone{}
+	// println("graph ${graph}")
+	// println("zones ${zones}")
 
 	unsafe {
 		outside_id := graph.node_count - 1
 		mut ptr := &graph.head[outside_id]
 		mut outside := &zones[outside_id]
 		mut receiving_zone := outside
+		// println("before loop ${zones}")
 
 		for {
 			// FIXME: check ptr to voidptr
-			for j := 0; j < receiving_zone.outputs.len; j++ {
-				mut transit := transits[ptr.eid]
+			for i := 0; i < receiving_zone.outputs.len && ptr != nil; i++ {
+				mut transit := &transits[ptr.eid]
 
 				if transit.is_visited || transit.is_blocked {
 					continue
@@ -62,6 +70,7 @@ fn evac_moving_step(graph &BimGraph, mut zones []BimZone, mut transits []BimTran
 					evac_cfg.max_speed,
 					evac_cfg.modeling_step
 				)
+				// println("Moved people ${moved_people}")
 				receiving_zone.numofpeople += moved_people
 				giver_zone.numofpeople -= moved_people
 				transit.nop_proceeding = moved_people
@@ -70,8 +79,8 @@ fn evac_moving_step(graph &BimGraph, mut zones []BimZone, mut transits []BimTran
 				transit.is_visited = true
 
 				if giver_zone.outputs.len > 1 &&
-				!giver_zone.is_blocked &&
-				!zones_to_process.any(it.id == giver_zone.id)
+					!giver_zone.is_blocked &&
+					!zones_to_process.any(it.uuid == giver_zone.uuid)
 				{
 					zones_to_process << giver_zone
 				}
