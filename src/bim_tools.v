@@ -43,6 +43,7 @@ mut:
 
 /// Структура, описывающая этаж
 struct BimLevel {
+mut:
 	zones []BimZone         ///< Массив зон, которые принадлежат этажу
 	transits []BimTransit      ///< Массив переходов, которые принадлежат этажу
 	name string           ///< Название этажа
@@ -178,7 +179,7 @@ fn outside_init(bim_json &BimJsonObject) BimZone {
 
 // Вычисление ширины проема по данным из модели здания
 fn calculate_transits_width(zones []BimZone, mut transits []BimTransit) {
-	for mut transit in transits {
+	for i, mut transit in transits {
 		related_zones := zones.filter(it.uuid in transit.outputs)
 
 		if related_zones.len == 0 {
@@ -186,7 +187,7 @@ fn calculate_transits_width(zones []BimZone, mut transits []BimTransit) {
 		}
 
 		if related_zones.all(it.sign == "Staircase") { // => Межэтажный проем
-			transit.width = math.sqrt((related_zones[0].area + related_zones[1].area) / 2)
+			transits[i].width = math.sqrt((related_zones[0].area + related_zones[1].area) / 2)
 			continue
 		}
 
@@ -195,7 +196,7 @@ fn calculate_transits_width(zones []BimZone, mut transits []BimTransit) {
 		mut numofpoints_edge1 := 2;
 		mut numofpoints_edge2 := 2;
 		for point in transit.polygon.points {
-			if geom_tools_is_point_in_polygon(point, related_zones[0].polygon) {
+			if geom_tools_is_point_in_polygon(&point, related_zones[0].polygon) {
 				match numofpoints_edge1 {
 					2 { edge1.p1 = point }
 					1 { edge1.p2 = point }
@@ -221,16 +222,16 @@ fn calculate_transits_width(zones []BimZone, mut transits []BimTransit) {
 			width1 := geom_tools_length_side(edge1.p1, edge1.p2)
 			width2 := geom_tools_length_side(edge2.p1, edge2.p2)
 
-			width = (width1 + width2) / 2
+			width = (width1 + width2) / 2.0
 		} else if transit.sign == "DoorWay" {
 			width = width_door_way(related_zones[0].polygon, related_zones[1].polygon, edge1, edge2)
 		}
 
-		transit.width = width
+		transits[i].width = width
 
-		if transit.width < 0 {
+		if transits[i].width < 0.0 {
 			panic("Ширина проема не определена:\n${transit}")
-		} else if transit.width < 0.5 {
+		} else if transits[i].width < 0.5 {
 			// TODO: add warning
 		}
 	}

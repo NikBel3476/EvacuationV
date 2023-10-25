@@ -35,12 +35,13 @@ fn evac_moving_step(
 	mut zones_to_process := []&BimZone{}
 
 	unsafe {
-		outside_id := graph.node_count - 1
+		outside_id := graph.head.len - 1
 		mut ptr := &graph.head[outside_id]
 		mut receiving_zone := &zones[outside_id]
 
-		for _ in 0..zones.len {
-			for i := 0; i < receiving_zone.outputs.len && ptr != nil; i++ {
+		println("ZONES LENGTH ${zones.len}")
+		for j in 0..zones.len {
+			for i := 0; i < receiving_zone.outputs.len /*&& ptr != nil*/; i++ {
 				mut transit := &transits[ptr.eid]
 
 				if transit.is_visited || transit.is_blocked {
@@ -80,6 +81,10 @@ fn evac_moving_step(
 				}
 
 				ptr = ptr.next
+				println("${j} ${i}---------------------")
+				println("moved people ${moved_people}")
+				println("ptr ${ptr}")
+				println("zones_to_process ${zones_to_process}")
 			}
 
 			zones_to_process.sort(a.potential < b.potential)

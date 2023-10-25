@@ -24,13 +24,13 @@ struct TransitionSpecial {
 }
 
 struct BimCfgDistribution {
-	@type                 DistributionType
+	@type                 string
 	density               f32
 	special               []DistributionSpecial
 }
 
 struct BimCfgTransitionsWidth {
-	@type                 TransitsWidthType
+	@type                 string
 	doorwayin             f32
 	doorwayout            f32
 	special               []TransitionSpecial
