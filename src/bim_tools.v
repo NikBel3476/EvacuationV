@@ -338,10 +338,10 @@ fn bim_tools_get_area_bim(bim &Bim) f64 {
 
 fn bim_tools_get_numofpeople(bim &Bim) f64 {
 	mut numofpeople := 0.0
-	for level in bim.levels {
-		for zone in level.zones {
-			numofpeople += zone.numofpeople
+		for zone in bim.zones {
+			if zone.sign != "Outside" {
+				numofpeople += zone.numofpeople
+			}
 		}
-	}
 	return numofpeople
 }

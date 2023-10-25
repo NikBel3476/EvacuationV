@@ -39,10 +39,11 @@ fn evac_moving_step(
 		mut ptr := &graph.head[outside_id]
 		mut receiving_zone := &zones[outside_id]
 
-		println("ZONES LENGTH ${zones.len}")
 		for j in 0..zones.len {
 			for i := 0; i < receiving_zone.outputs.len /*&& ptr != nil*/; i++ {
+				println("${j} ${i}---------------------")
 				mut transit := &transits[ptr.eid]
+				println("transit ${transit}")
 
 				if transit.is_visited || transit.is_blocked {
 					ptr = ptr.next
@@ -81,8 +82,9 @@ fn evac_moving_step(
 				}
 
 				ptr = ptr.next
-				println("${j} ${i}---------------------")
 				println("moved people ${moved_people}")
+				println("receiving_zone ${receiving_zone}")
+				println("giver_zone ${giver_zone}")
 				println("ptr ${ptr}")
 				println("zones_to_process ${zones_to_process}")
 			}
@@ -124,7 +126,7 @@ fn potential_element(
 ) f64 {
 	p := math.sqrt(giver_zone.area) /
 		speed_at_exit(receiving_zone, giver_zone, transit.width, evac_speed_max)
-	if receiving_zone.potential >= math.max_f64 {
+	if receiving_zone.potential >= math.max_f32 {
 		return p
 	}
 	return receiving_zone.potential + p
@@ -163,7 +165,7 @@ fn speed_in_element(receiving_zone &BimZone, giver_zone &BimZone, evac_speed_max
        *       \                          => direction = 1
        *        \______   aGiverItem
        */
-		direction := if dh > 0 { -1 } else { 1 }
+		direction := if dh > 0.0 { -1 } else { 1 }
 		v_zone = evac_speed_on_stair(density_in_giver_zone, direction)
 	}
 
@@ -187,7 +189,7 @@ fn evac_speed_on_stair(density_in_zone f64, direction int) f64 {
 	mut v0 := 0.0
 	mut a := 0.0
 
-	if direction > 0 {
+	if direction > 0.0 {
 		d0 = 0.67;
 		v0 = 50.0;
 		a = 0.305;
@@ -221,10 +223,10 @@ fn speed_trough_transit(transit_width f64, density_in_zone f64, v_max f64) f64 {
 	mut v0k := -1.0;
 
 	if density_in_zone > d0 {
-		m := if density_in_zone > 5 { 1.25 - 0.05 * density_in_zone } else { 1 }
+		m := if density_in_zone > 5.0 { 1.25 - 0.05 * density_in_zone } else { 1.0 }
 		v0k = velocity(v0, a, density_in_zone, d0) * m
 
-		if density_in_zone >= 9 && transit_width < 1.6
+		if density_in_zone >= 9.0 && transit_width < 1.6
 		{
 			v0k = 10 * (2.5 + 3.75 * transit_width) / d0
 		}
@@ -258,7 +260,7 @@ fn part_people_flow(
 	area_giver_zone := giver_zone.area
 	people_in_giver_zone := giver_zone.numofpeople
 	density_in_giver_zone := people_in_giver_zone / area_giver_zone
-	density_min_giver_zone := if evac_density_min > 0 { evac_density_min } else { 0.5 / area_giver_zone }
+	density_min_giver_zone := if evac_density_min > 0.0 { evac_density_min } else { 0.5 / area_giver_zone }
 
 	// Ширина перехода между зонами зависит от количества человек,
 	// которое осталось в помещении. Если там слишком мало людей,
@@ -285,7 +287,7 @@ fn part_people_flow(
 	capacity_receiving_zone := max_numofpeople - receiving_zone.numofpeople
 	// Такая ситуация возникает при плотности в принимающем помещении более Dmax чел./м2
 	// Фактически capacity_reciving_zone < 0 означает, что помещение не может принять людей
-	if capacity_receiving_zone < 0 {
+	if capacity_receiving_zone < 0.0 {
 		return 0.0
 	}
 	return if capacity_receiving_zone > part_of_people_flow {

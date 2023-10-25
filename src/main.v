@@ -34,7 +34,7 @@ fn app(cmd Command) ! {
 		panic('Failed to decode BimCfgScenario. Error: ${err}')
 	}
 
-	// println(scenario_configuration)
+	println(scenario_configuration)
 
 	for bim_file_name in scenario_configuration.bim {
 		bim_json := bim_json_new(bim_file_name)
@@ -56,6 +56,9 @@ fn app(cmd Command) ! {
 		println("area ${total_area}")
 
 		bim_graph := bim_graph_new(bim_tools)
+		for node in bim_graph.head {
+			println("graph ${node}\nnext${node.next}")
+		}
 
 		mut evac_cfg := EvacConfiguration {
 			max_speed: scenario_configuration.modeling.speed_max
