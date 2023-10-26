@@ -4,7 +4,7 @@ import cli { Command }
 import os
 import json
 
-fn main() {
+/*fn main() {
 	mut cmd := Command {
 		name: 'EvacuationV'
 		description: 'EvacuationV'
@@ -20,10 +20,12 @@ fn main() {
 	cmd.add_command(config_cmd)
 	cmd.setup()
 	cmd.parse(os.args)
-}
+}*/
 
-fn app(cmd Command) ! {
-	cfg_file_name := cmd.args[0]
+// fn app(cmd Command) ! {
+fn main() {
+	// cfg_file_name := cmd.args[0]
+	cfg_file_name := "scenario.json"
 	full_path := os.abs_path(cfg_file_name)
 	println('Using scenario configuration file: ${full_path}')
 	scenario_configuration_json := os.read_file(full_path) or {

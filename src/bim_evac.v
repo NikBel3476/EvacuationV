@@ -36,7 +36,7 @@ fn evac_moving_step(
 
 	unsafe {
 		outside_id := graph.head.len - 1
-		mut ptr := &graph.head[outside_id]
+		mut ptr := graph.head[outside_id]
 		mut receiving_zone := &zones[outside_id]
 
 		for j in 0..zones.len {
@@ -93,7 +93,7 @@ fn evac_moving_step(
 
 			if zones_to_process.len > 0 {
 				receiving_zone = zones_to_process[0]
-				ptr = &graph.head[receiving_zone.id]
+				ptr = graph.head[receiving_zone.id]
 				zones_to_process.delete(0)
 			}
 		}

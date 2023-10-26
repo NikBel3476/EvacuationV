@@ -2,11 +2,12 @@ module main
 
 struct BimGraph {
 mut:
-	head []BimNode
+	head []&BimNode
 	node_count usize
 }
 
 struct BimNode {
+mut:
 	dest usize
 	eid usize
 	next &BimNode
@@ -29,10 +30,11 @@ fn graph_create(edges []BimEdge, edge_count usize, node_count usize) BimGraph {
 	mut src := usize(0)
 	mut dest := usize(0)
 	mut eid := usize(0)
+	println("edges ${edges}")
 
 	unsafe {
 		// add edges to the directed graph one by one
-		mut nodes := []BimNode{len: int(node_count)}
+		mut nodes := []&BimNode{len: int(edges.len)}
 
 		for edge in edges {
 			// get the source and destination vertex
@@ -41,24 +43,24 @@ fn graph_create(edges []BimEdge, edge_count usize, node_count usize) BimGraph {
 			eid = edge.id
 
 			// 1. allocate a new node of adjacency list from `src` to `dest`
-			src_to_dest := BimNode {
+			mut src_to_dest := &BimNode {
 				dest: dest
 				eid: eid
-				next: &nodes[src] // point new node to the current head
+				next: nodes[src] // point new node to the current head
 			}
 
 			// point head pointer to the new node
 			nodes[src] = src_to_dest
 
 			// 2. allocate a new node of adjacency list from `dest` to `src`
-			dest_to_src := BimNode {
+			mut dest_to_src := &BimNode {
 				dest: src
 				eid: eid
-				next: &nodes[dest] // point new node to the current head
+				next: nodes[dest] // point new node to the current head
 			}
 
 			// change head pointer to point to the new node
-			nodes[dest] = &dest_to_src
+			nodes[dest] = dest_to_src
 		}
 
 		graph := BimGraph {
