@@ -40,10 +40,10 @@ fn evac_moving_step(
 		mut receiving_zone := &zones[outside_id]
 
 		for j in 0..zones.len {
-			for i := 0; i < receiving_zone.outputs.len /*&& ptr != nil*/; i++ {
-				println("${j} ${i}---------------------")
+			for i := 0; i < receiving_zone.outputs.len && ptr != nil; i++ {
+				// println("${j} ${i}---------------------")
+				// println("ptr_begin ${ptr}")
 				mut transit := &transits[ptr.eid]
-				println("transit ${transit}")
 
 				if transit.is_visited || transit.is_blocked {
 					ptr = ptr.next
@@ -82,18 +82,32 @@ fn evac_moving_step(
 				}
 
 				ptr = ptr.next
-				println("moved people ${moved_people}")
-				println("receiving_zone ${receiving_zone}")
-				println("giver_zone ${giver_zone}")
-				println("ptr ${ptr}")
-				println("zones_to_process ${zones_to_process}")
+				// println("moved people ${moved_people}")
+				// println("ptr_end ${ptr}")
+				// println("transit ${transit}")
+				// println("giver_zone ${giver_zone}")
+				// println("receiving_zone ${receiving_zone}")
+				// println("zones_to_process ${zones_to_process}")
 			}
 
-			zones_to_process.sort(a.potential < b.potential)
+			// zones_to_process.sort(a.potential < b.potential)
+			// FIXME: unstable sorting on windows (this sorting affects the modeling result)
+			zones_to_process.sort_with_compare(fn (a &&BimZone, b &&BimZone) int {
+				if a.potential < b.potential {
+					return 1
+				}
+				if a.potential > b.potential {
+					return -1
+				}
+				return 0
+			})
 
 			if zones_to_process.len > 0 {
+				// println("zones_to_process sorted ${zones_to_process}")
 				receiving_zone = zones_to_process[0]
 				ptr = graph.head[receiving_zone.id]
+				// println("deleted zone ${receiving_zone}")
+				// println("new pointer ${ptr}")
 				zones_to_process.delete(0)
 			}
 		}

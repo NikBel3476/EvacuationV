@@ -30,11 +30,11 @@ fn graph_create(edges []BimEdge, edge_count usize, node_count usize) BimGraph {
 	mut src := usize(0)
 	mut dest := usize(0)
 	mut eid := usize(0)
-	println("edges ${edges}")
+	// println("edges ${edges}")
 
 	unsafe {
 		// add edges to the directed graph one by one
-		mut nodes := []&BimNode{len: int(edges.len)}
+		mut nodes := []&BimNode{len: int(node_count)}
 
 		for edge in edges {
 			// get the source and destination vertex

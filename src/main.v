@@ -4,7 +4,7 @@ import cli { Command }
 import os
 import json
 
-/*fn main() {
+fn main() {
 	mut cmd := Command {
 		name: 'EvacuationV'
 		description: 'EvacuationV'
@@ -20,12 +20,11 @@ import json
 	cmd.add_command(config_cmd)
 	cmd.setup()
 	cmd.parse(os.args)
-}*/
+}
 
-// fn app(cmd Command) ! {
-fn main() {
-	// cfg_file_name := cmd.args[0]
-	cfg_file_name := "scenario.json"
+fn app(cmd Command) ! {
+// fn main() {
+	cfg_file_name := cmd.args[0]
 	full_path := os.abs_path(cfg_file_name)
 	println('Using scenario configuration file: ${full_path}')
 	scenario_configuration_json := os.read_file(full_path) or {
@@ -36,7 +35,7 @@ fn main() {
 		panic('Failed to decode BimCfgScenario. Error: ${err}')
 	}
 
-	println(scenario_configuration)
+	// println(scenario_configuration)
 
 	for bim_file_name in scenario_configuration.bim {
 		bim_json := bim_json_new(bim_file_name)
@@ -54,13 +53,13 @@ fn main() {
 				total_num_of_people += zone.numofpeople
 			}
 		}
-		println("people ${total_num_of_people}")
-		println("area ${total_area}")
+		// println("people ${total_num_of_people}")
+		// println("area ${total_area}")
 
 		bim_graph := bim_graph_new(bim_tools)
-		for node in bim_graph.head {
-			println("graph ${node}\nnext${node.next}")
-		}
+		// for node in bim_graph.head {
+		// 	println("graph ${node}\nnext${node.next}")
+		// }
 
 		mut evac_cfg := EvacConfiguration {
 			max_speed: scenario_configuration.modeling.speed_max
@@ -73,9 +72,9 @@ fn main() {
 
 		remainder := 0.0 // Количество человек, которое может остаться в зд. для остановки цикла
 		mut counter := 0
-		println("bim ${bim_tools}")
+		// println("bim ${bim_tools}")
 		for {
-			println("step ${counter++}------------------------------------------------------")
+			// println("step ${counter++}------------------------------------------------------")
 			evac_moving_step(&bim_graph, mut bim_tools.zones, mut bim_tools.transits, &evac_cfg)
 			evac_time_inc(mut &evac_cfg)
 
@@ -91,8 +90,8 @@ fn main() {
 			}
 		}
 
-		println("Длительность эвакуации: ${evac_get_time_s(evac_cfg)} с. (${evac_get_time_m(evac_cfg)} мин.)")
-		println("Количество человек: в здании - ${bim_tools_get_numofpeople(bim_tools)} (в безопасной зоне - ${bim_tools.zones.last().numofpeople}) чел.")
+		println("Длительность эвакуации: ${evac_get_time_s(evac_cfg):.2} с. (${evac_get_time_m(evac_cfg):.2} мин.)")
+		println("Количество человек: в здании - ${bim_tools_get_numofpeople(bim_tools):.2} (в безопасной зоне - ${bim_tools.zones.last().numofpeople:.2}) чел.")
 		println("---------------------------------------")
 	}
 }

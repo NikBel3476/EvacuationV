@@ -4,6 +4,8 @@
     "res/one_zone_one_exit.json",
     "res/three_zone_three_transit.json",
     "res/building_test.json",
+    "res/example-one-exit.json",
+    "res/example-two-exits.json",
     "res/udsu_block_1.json",
     "res/udsu_block_2.json",
     "res/udsu_block_3.json",
@@ -14,7 +16,7 @@
   "logger_configure": "../logger.conf",
   "distribution": {
     "type": "uniform",
-    "density": 0.1,
+    "density": 1.0,
     "special": [
       {
         "uuid": [
