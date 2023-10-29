@@ -35,44 +35,10 @@ fn app(cmd Command) ! {
 	}
 
 	for bim_file_name in scenario_configuration.bim {
-		bim_json := bim_json_new(bim_file_name)
-		println('The file name of the used bim `${bim_file_name.split('/').last()}`')
+		modeling_result := run_modeling(&bim_file_name, &scenario_configuration)
 
-		mut bim_tools := bim_tools_new(bim_json)
-
-		apply_scenario_bim_params(mut bim_tools, scenario_configuration)
-
-		bim_graph := bim_graph_new(bim_tools)
-
-		mut evac_cfg := EvacConfiguration{
-			max_speed: scenario_configuration.modeling.speed_max
-			max_density: scenario_configuration.modeling.density_max
-			min_density: scenario_configuration.modeling.density_min
-			modeling_step: scenario_configuration.modeling.step
-			evac_time: 0.0
-		}
-		evac_cfg.modeling_step = evac_def_modeling_step(bim_tools, &evac_cfg)
-
-		remainder := 0.0 // Количество человек, которое может остаться в зд. для остановки цикла
-		for {
-			evac_moving_step(&bim_graph, mut bim_tools.zones, mut bim_tools.transits,
-				&evac_cfg)
-			evac_time_inc(mut &evac_cfg)
-
-			mut num_of_people := 0.0
-			for zone in bim_tools.zones {
-				if zone.is_visited {
-					num_of_people += zone.numofpeople
-				}
-			}
-
-			if num_of_people <= remainder {
-				break
-			}
-		}
-
-		println('Длительность эвакуации: ${evac_get_time_s(evac_cfg):.2} с. (${evac_get_time_m(evac_cfg):.2} мин.)')
-		println('Количество человек: в здании - ${bim_tools_get_numofpeople(bim_tools):.2} (в безопасной зоне - ${bim_tools.zones.last().numofpeople:.2}) чел.')
+		println('Длительность эвакуации: ${modeling_result.evacuation_time_in_sec:.2} с. (${modeling_result.evacuation_time_in_min:.2} мин.)')
+		println('Количество человек: в здании - ${modeling_result.number_of_people_in_building:.2} (в безопасной зоне - ${modeling_result.number_of_evacuated_people:.2}) чел.')
 		println('---------------------------------------')
 	}
 }

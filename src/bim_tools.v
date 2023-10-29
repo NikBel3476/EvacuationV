@@ -57,6 +57,61 @@ mut:
 	transits []BimTransit ///< Список переходов объекта
 }
 
+struct ModelingResult {
+	evacuation_time_in_sec       f64
+	evacuation_time_in_min       f64
+	number_of_people_in_building f64
+	number_of_evacuated_people   f64
+}
+
+fn run_modeling(bim_file_name &string, scenario_configuration &BimCfgScenario) ModelingResult {
+	bim_json := bim_json_new(bim_file_name)
+	println('The file name of the used bim `${bim_file_name.split('/').last()}`')
+
+	mut bim_tools := bim_tools_new(bim_json)
+
+	apply_scenario_bim_params(mut bim_tools, scenario_configuration)
+
+	bim_graph := bim_graph_new(bim_tools)
+
+	mut evac_cfg := EvacConfiguration{
+		max_speed: scenario_configuration.modeling.speed_max
+		max_density: scenario_configuration.modeling.density_max
+		min_density: scenario_configuration.modeling.density_min
+		modeling_step: scenario_configuration.modeling.step
+		evac_time: 0.0
+	}
+	evac_cfg.modeling_step = evac_def_modeling_step(bim_tools, &evac_cfg)
+
+	return run_evacuation(mut &bim_tools, &bim_graph, mut &evac_cfg)
+}
+
+fn run_evacuation(mut bim Bim, bim_graph &BimGraph, mut evac_cfg EvacConfiguration) ModelingResult {
+	remainder := 0.0 // Количество человек, которое может остаться в зд. для остановки цикла
+	for {
+		evac_moving_step(bim_graph, mut bim.zones, mut bim.transits, evac_cfg)
+		evac_time_inc(mut evac_cfg)
+
+		mut num_of_people := 0.0
+		for zone in bim.zones {
+			if zone.is_visited {
+				num_of_people += zone.numofpeople
+			}
+		}
+
+		if num_of_people <= remainder {
+			break
+		}
+	}
+
+	return ModelingResult{
+		evacuation_time_in_sec: evac_get_time_s(evac_cfg)
+		evacuation_time_in_min: evac_get_time_m(evac_cfg)
+		number_of_people_in_building: bim_tools_get_numofpeople(bim)
+		number_of_evacuated_people: bim.zones.last().numofpeople
+	}
+}
+
 fn bim_tools_new(bim_json &BimJsonObject) Bim {
 	mut bim_element_rs_id := usize(0)
 	mut bim_element_d_id := usize(0)
