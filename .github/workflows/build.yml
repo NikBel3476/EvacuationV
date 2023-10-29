@@ -35,4 +35,4 @@ jobs:
       - name: Run tests
         run: |
           cd ${{ github.event.repository.name }}
-          v test "${{ github.event.repository.name }}/"
+          v test .
