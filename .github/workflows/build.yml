@@ -33,4 +33,6 @@ jobs:
         run: v -prod "${{ github.event.repository.name }}/"
 
       - name: Run tests
-        run: v test "${{ github.event.repository.name }}/"
+        run: |
+          cd ${{ github.event.repository.name }}
+          v test "${{ github.event.repository.name }}/"
