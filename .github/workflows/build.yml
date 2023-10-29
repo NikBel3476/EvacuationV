@@ -18,6 +18,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        with:
+          path: ${{ github.event.repository.name }}
 
       - name: Install V
         uses: vlang/setup-v@v1
@@ -25,12 +27,10 @@ jobs:
           check-latest: true
 
       - name: Check if code is formatted
-        run: |
-          v fmt -diff .
-          v fmt -verify .
+        run: v fmt -verify "${{ github.event.repository.name }}/"
 
       - name: Build
-        run: v -prod .
+        run: v -prod "${{ github.event.repository.name }}/"
 
       - name: Run tests
-        run: v test .
+        run: v test "${{ github.event.repository.name }}/"
