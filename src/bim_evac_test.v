@@ -1,11 +1,11 @@
 module main
 
 fn test_speed_in_element() {
-	receiving_zone := BimZone {
+	receiving_zone := BimZone{
 		id: 1
-		name: "Receiving zone"
-		uuid: "00000000-0000-0000-0000-000000000000"
-		outputs: ["00000000-0000-0000-0000-000000000000"]
+		name: 'Receiving zone'
+		uuid: '00000000-0000-0000-0000-000000000000'
+		outputs: ['00000000-0000-0000-0000-000000000000']
 		area: 10.0
 		z_level: 1.0
 		numofpeople: 10.0
@@ -13,17 +13,17 @@ fn test_speed_in_element() {
 		is_blocked: false
 		is_visited: false
 		is_safe: true
-		sign: "Room"
+		sign: 'Room'
 		size_z: 2.0
 		polygon: Polygon{[]}
 		potential: 1.0
 	}
 
-	transmitting_zone := BimZone {
+	transmitting_zone := BimZone{
 		id: 2
-		name: "Transmitting zone"
-		uuid: "00000000-0000-0000-0000-000000000000"
-		outputs: ["00000000-0000-0000-0000-000000000000"]
+		name: 'Transmitting zone'
+		uuid: '00000000-0000-0000-0000-000000000000'
+		outputs: ['00000000-0000-0000-0000-000000000000']
 		area: 10.0
 		z_level: 1.0
 		numofpeople: 10.0
@@ -31,7 +31,7 @@ fn test_speed_in_element() {
 		is_blocked: false
 		is_visited: false
 		is_safe: true
-		sign: "Room"
+		sign: 'Room'
 		size_z: 2.0
 		polygon: Polygon{[]}
 		potential: 1.0
@@ -42,11 +42,11 @@ fn test_speed_in_element() {
 }
 
 fn test_speed_at_exit() {
-	receiving_zone := BimZone {
+	receiving_zone := BimZone{
 		id: 1
-		name: "Receiving zone"
-		uuid: "00000000-0000-0000-0000-000000000000"
-		outputs: ["00000000-0000-0000-0000-000000000000"]
+		name: 'Receiving zone'
+		uuid: '00000000-0000-0000-0000-000000000000'
+		outputs: ['00000000-0000-0000-0000-000000000000']
 		area: 10.0
 		z_level: 1.0
 		numofpeople: 10.0
@@ -54,17 +54,17 @@ fn test_speed_at_exit() {
 		is_blocked: false
 		is_visited: false
 		is_safe: true
-		sign: "Room"
+		sign: 'Room'
 		size_z: 2.0
 		polygon: Polygon{[]}
 		potential: 1.0
 	}
 
-	transmitting_zone := BimZone {
+	transmitting_zone := BimZone{
 		id: 2
-		name: "Transmitting zone"
-		uuid: "00000000-0000-0000-0000-000000000000"
-		outputs: ["00000000-0000-0000-0000-000000000000"]
+		name: 'Transmitting zone'
+		uuid: '00000000-0000-0000-0000-000000000000'
+		outputs: ['00000000-0000-0000-0000-000000000000']
 		area: 10.0
 		z_level: 1.0
 		numofpeople: 10.0
@@ -72,7 +72,7 @@ fn test_speed_at_exit() {
 		is_blocked: false
 		is_visited: false
 		is_safe: true
-		sign: "Room"
+		sign: 'Room'
 		size_z: 2.0
 		polygon: Polygon{[]}
 		potential: 1.0
@@ -84,11 +84,11 @@ fn test_speed_at_exit() {
 }
 
 fn test_change_num_of_people() {
-	transmitting_zone := BimZone {
+	transmitting_zone := BimZone{
 		id: 2
-		name: "Transmitting zone"
-		uuid: "00000000-0000-0000-0000-000000000000"
-		outputs: ["00000000-0000-0000-0000-000000000000"]
+		name: 'Transmitting zone'
+		uuid: '00000000-0000-0000-0000-000000000000'
+		outputs: ['00000000-0000-0000-0000-000000000000']
 		area: 10.0
 		z_level: 1.0
 		numofpeople: 10.0
@@ -96,7 +96,7 @@ fn test_change_num_of_people() {
 		is_blocked: false
 		is_visited: false
 		is_safe: true
-		sign: "Room"
+		sign: 'Room'
 		size_z: 2.0
 		polygon: Polygon{[]}
 		potential: 1.0
@@ -109,11 +109,11 @@ fn test_change_num_of_people() {
 }
 
 fn test_potential_element() {
-	receiving_zone := BimZone {
+	receiving_zone := BimZone{
 		id: 1
-		name: "Receiving zone"
-		uuid: "00000000-0000-0000-0000-000000000000"
-		outputs: ["00000000-0000-0000-0000-000000000000"]
+		name: 'Receiving zone'
+		uuid: '00000000-0000-0000-0000-000000000000'
+		outputs: ['00000000-0000-0000-0000-000000000000']
 		area: 10.0
 		z_level: 1.0
 		numofpeople: 10.0
@@ -121,17 +121,17 @@ fn test_potential_element() {
 		is_blocked: false
 		is_visited: false
 		is_safe: true
-		sign: "Room"
+		sign: 'Room'
 		size_z: 2.0
 		polygon: Polygon{[]}
 		potential: 1.0
 	}
 
-	transmitting_zone := BimZone {
+	transmitting_zone := BimZone{
 		id: 2
-		name: "Transmitting zone"
-		uuid: "00000000-0000-0000-0000-000000000000"
-		outputs: ["00000000-0000-0000-0000-000000000000"]
+		name: 'Transmitting zone'
+		uuid: '00000000-0000-0000-0000-000000000000'
+		outputs: ['00000000-0000-0000-0000-000000000000']
 		area: 10.0
 		z_level: 1.0
 		numofpeople: 10.0
@@ -139,23 +139,23 @@ fn test_potential_element() {
 		is_blocked: false
 		is_visited: false
 		is_safe: true
-		sign: "Room"
+		sign: 'Room'
 		size_z: 2.0
 		polygon: Polygon{[]}
 		potential: 1.0
 	}
 
-	transit := BimTransit {
-		uuid: "00000000-0000-0000-0000-000000000000"
+	transit := BimTransit{
+		uuid: '00000000-0000-0000-0000-000000000000'
 		id: 1
-		name: "Transit"
-		outputs: ["00000000-0000-0000-0000-000000000000"]
+		name: 'Transit'
+		outputs: ['00000000-0000-0000-0000-000000000000']
 		polygon: Polygon{[]}
 		size_z: 2.0
 		z_level: 1.0
 		width: 1.0
 		nop_proceeding: 0.0
-		sign: "DoorWay"
+		sign: 'DoorWay'
 		is_visited: false
 		is_blocked: false
 	}
@@ -165,11 +165,11 @@ fn test_potential_element() {
 }
 
 fn test_part_people_flow() {
-	receiving_zone := BimZone {
+	receiving_zone := BimZone{
 		id: 1
-		name: "Receiving zone"
-		uuid: "00000000-0000-0000-0000-000000000000"
-		outputs: ["00000000-0000-0000-0000-000000000000"]
+		name: 'Receiving zone'
+		uuid: '00000000-0000-0000-0000-000000000000'
+		outputs: ['00000000-0000-0000-0000-000000000000']
 		area: 10.0
 		z_level: 1.0
 		numofpeople: 10.0
@@ -177,17 +177,17 @@ fn test_part_people_flow() {
 		is_blocked: false
 		is_visited: false
 		is_safe: true
-		sign: "Room"
+		sign: 'Room'
 		size_z: 2.0
 		polygon: Polygon{[]}
 		potential: 1.0
 	}
 
-	transmitting_zone := BimZone {
+	transmitting_zone := BimZone{
 		id: 2
-		name: "Transmitting zone"
-		uuid: "00000000-0000-0000-0000-000000000000"
-		outputs: ["00000000-0000-0000-0000-000000000000"]
+		name: 'Transmitting zone'
+		uuid: '00000000-0000-0000-0000-000000000000'
+		outputs: ['00000000-0000-0000-0000-000000000000']
 		area: 10.0
 		z_level: 1.0
 		numofpeople: 10.0
@@ -195,23 +195,23 @@ fn test_part_people_flow() {
 		is_blocked: false
 		is_visited: false
 		is_safe: true
-		sign: "Room"
+		sign: 'Room'
 		size_z: 2.0
 		polygon: Polygon{[]}
 		potential: 1.0
 	}
 
-	transit := BimTransit {
-		uuid: "00000000-0000-0000-0000-000000000000"
+	transit := BimTransit{
+		uuid: '00000000-0000-0000-0000-000000000000'
 		id: 1
-		name: "Transit"
-		outputs: ["00000000-0000-0000-0000-000000000000"]
+		name: 'Transit'
+		outputs: ['00000000-0000-0000-0000-000000000000']
 		polygon: Polygon{[]}
 		size_z: 2.0
 		z_level: 1.0
 		width: 1.0
 		nop_proceeding: 0.0
-		sign: "DoorWay"
+		sign: 'DoorWay'
 		is_visited: false
 		is_blocked: false
 	}
@@ -220,13 +220,6 @@ fn test_part_people_flow() {
 	speed_max := 100.0
 	modeling_step := 0.01
 
-	assert part_people_flow(
-		&receiving_zone,
-		&transmitting_zone,
-		&transit,
-		density_min,
-		density_max,
-		speed_max,
-		modeling_step
-	) == 0.8013633567871893
+	assert part_people_flow(&receiving_zone, &transmitting_zone, &transit, density_min,
+		density_max, speed_max, modeling_step) == 0.8013633567871893
 }

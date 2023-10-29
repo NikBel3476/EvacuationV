@@ -27,14 +27,15 @@ fn geom_tools_area_polygon(polygon &Polygon) f64 {
 	// https://ru.wikipedia.org/wiki/Формула_площади_Гаусса
 	n := polygon.points.len - 2 // last point is equal to first, so we don't count it
 	mut sum := polygon.points[n].x * polygon.points[0].y - polygon.points[0].x * polygon.points[n].y
-	for i := 0 ; i < n; i++ {
+	for i := 0; i < n; i++ {
 		sum += polygon.points[i].x * polygon.points[i + 1].y - polygon.points[i + 1].x * polygon.points[i].y
 	}
 	return 0.5 * math.abs(sum)
 }
 
 fn on_segment(a &Point, b &Point, c &Point) bool {
-	return geom_tools_length_side(a, b) + geom_tools_length_side(b, c) == geom_tools_length_side(a, c)
+	return geom_tools_length_side(a, b) + geom_tools_length_side(b, c) == geom_tools_length_side(a,
+		c)
 }
 
 fn geom_tools_is_point_in_polygon(point &Point, polygon &Polygon) bool {
@@ -45,10 +46,8 @@ fn geom_tools_is_point_in_polygon(point &Point, polygon &Polygon) bool {
 		if on_segment(&point1, point, &point2) {
 			return true
 		}
-		if (point2.y > point.y) != (point1.y > point.y) &&
-				point.x < (point1.x - point2.x) * (point.y - point2.y) /
-					(point1.y - point2.y) + point2.x
-		{
+		if (point2.y > point.y) != (point1.y > point.y)
+			&& point.x < (point1.x - point2.x) * (point.y - point2.y) / (point1.y - point2.y) + point2.x {
 			c = !c
 		}
 		point1 = point2
@@ -61,7 +60,7 @@ fn area(p1 &Point, p2 &Point, p3 &Point) f64 {
 	return (p2.x - p1.x) * (p3.y - p1.y) - (p2.y - p1.y) * (p3.x - p1.x)
 }
 
-fn fswap(v1 &f64, v2 &f64)  {
+fn fswap(v1 &f64, v2 &f64) {
 	unsafe {
 		tmp_v1 := *v1
 		*v1 = *v2
@@ -85,21 +84,19 @@ fn geom_tools_is_intersect_line(l1 &Line, l2 &Line) bool {
 	p2 := l1.p2
 	p3 := l2.p1
 	p4 := l2.p2
-	return intersect_1(p1.x, p2.x, p3.x, p4.x) &&
-		intersect_1(p1.y, p2.y, p3.y, p4.y) &&
-		area(p1, p2, p3) * area(p1, p2, p4) <= 0 &&
-		area(p3, p4, p1) * area(p3, p4, p2) <= 0
+	return intersect_1(p1.x, p2.x, p3.x, p4.x) && intersect_1(p1.y, p2.y, p3.y, p4.y)
+		&& area(p1, p2, p3) * area(p1, p2, p4) <= 0 && area(p3, p4, p1) * area(p3, p4, p2) <= 0
 }
 
 // Определение точки на линии, расстояние до которой от заданной точки является минимальным из существующих
 fn geom_tools_nearest_point(point_start &Point, line &Line) Point {
-	point_a := Point {
-		x: line.p1.x,
+	point_a := Point{
+		x: line.p1.x
 		y: line.p1.y
 	}
 
-	point_b := Point {
-		x: line.p2.x,
+	point_b := Point{
+		x: line.p2.x
 		y: line.p2.y
 	}
 
@@ -122,16 +119,14 @@ fn geom_tools_nearest_point(point_start &Point, line &Line) Point {
 	if param < 0 {
 		xx = point_a.x
 		yy = point_a.y
-	}
-	else if param > 1 {
+	} else if param > 1 {
 		xx = point_b.x
 		yy = point_b.y
-	}
-	else {
+	} else {
 		xx = point_a.x + param * c
 		yy = point_a.y + param * d
 	}
-	mut point_end := Point { 0, 0 }
+	mut point_end := Point{0, 0}
 	point_end.x = xx
 	point_end.y = yy
 	return point_end

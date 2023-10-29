@@ -12,28 +12,28 @@ enum TransitsWidthType {
 }
 
 struct DistributionSpecial {
-	uuid         []string
-	density        f32
+	uuid     []string
+	density  f32
 	_comment string
 }
 
 struct TransitionSpecial {
-	uuid         []string
-	width        f32
+	uuid     []string
+	width    f32
 	_comment string
 }
 
 struct BimCfgDistribution {
-	@type                 string
-	density               f32
-	special               []DistributionSpecial
+	@type   string
+	density f32
+	special []DistributionSpecial
 }
 
 struct BimCfgTransitionsWidth {
-	@type                 string
-	doorwayin             f32
-	doorwayout            f32
-	special               []TransitionSpecial
+	@type      string
+	doorwayin  f32
+	doorwayout f32
+	special    []TransitionSpecial
 }
 
 struct BimCfgModeling {
@@ -44,7 +44,7 @@ struct BimCfgModeling {
 }
 
 struct BimCfgScenario {
-	bim []string
+	bim              []string
 	logger_configure string
 	distribution     BimCfgDistribution
 	transits         BimCfgTransitionsWidth
