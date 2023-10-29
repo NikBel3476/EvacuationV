@@ -3,6 +3,7 @@ module main
 import cli { Command }
 import os
 import json
+import time
 
 fn main() {
 	mut cmd := Command{
@@ -34,6 +35,7 @@ fn app(cmd Command) ! {
 		panic('Failed to decode BimCfgScenario. Error: ${err}')
 	}
 
+	sw := time.new_stopwatch()
 	for bim_file_name in scenario_configuration.bim {
 		modeling_result := run_modeling(&bim_file_name, &scenario_configuration)
 
@@ -41,6 +43,7 @@ fn app(cmd Command) ! {
 		println('Количество человек: в здании - ${modeling_result.number_of_people_in_building:.2} (в безопасной зоне - ${modeling_result.number_of_evacuated_people:.2}) чел.')
 		println('---------------------------------------')
 	}
+	println("Elapsed ${sw.elapsed().milliseconds()} ms")
 }
 
 fn apply_scenario_bim_params(mut bim Bim, scenario_configuration &BimCfgScenario) {
